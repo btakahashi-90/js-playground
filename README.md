@@ -11,6 +11,10 @@ Note: This file was created and tested using Atom Live Server, thus the comment 
 
 [Atom Live Server](https://github.com/jas-chen/atom-live-server)
 
+# Changelog
+- Fixed adjacent tiles w/ different enemies bug...
+- Updated journal entries with "static" tile_id instead of recalculating it at every...step...minor optimization
+
 # TODO
 - COMBAT
 - Journal REWRITING on kill/object use
@@ -22,4 +26,4 @@ Note: This file was created and tested using Atom Live Server, thus the comment 
 - Implement "splash" to help "hide" load time and map generation
 
 # BUGS!
-- Tiles adjacent to COMBAT can have different enemies in journal...
+- None?

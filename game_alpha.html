@@ -539,17 +539,12 @@
                     // surely it's not that simple...
                }
 
-               // I guess we put in the collapsible code now...
-               // put it in a function so it waits for entry items to be created
-               // this works too well...it collapses when clicking the input box...
-               // We ONLY want it to collapse if you click the label, not it's children...
-               // figured it out...
                function bind_collapsible(){
                     collapsible_entries = $(".journal_entry_label") // this is what we click to reveal the entry
                     collapsible_entries.each(function(){
                          $(this).children("p").on("click", function(){
                               /* THIS IS NOT THE WAY TO ACCOMPLISH THIS TASK.
-                              It SHOULD be easier to have a base heigh/display and use a class to override it
+                              It SHOULD be easier to have a base height/display and use a class to override it
                               But meh...it's just a small project...*/
                               $(this).parent().toggleClass("active")
                               $(this).siblings(".journal_entry").toggleClass("hidden_entry")
@@ -786,24 +781,22 @@
                     "heal": "A font of life",
                     "treasure": "A chest. Surely empty",
                }
+               num_enemies = journal_text["enemy"].length - 1 // do -1 since we're using it for rng on array size
+
                function write_to_journal(tile_index){
                     journal_index = j2t_map.indexOf(tile.toString())
                     // okay, go wall by wall...I guess?
                     tile = $($(".tile")[tile_index])
+                    tile_id = parseInt(tile.attr('id'))
                     // this is what happens when you don't plan things
                     // FIX THIS - REMOVE TEXT AREA FROM JOURNAL FOR GAME PURPOSES
                     $($(".journal_entry")[journal_index]).text("")
-                    // minor optimization
-                    num_enemies = journal_text["enemy"].length - 1 // do -1 since we're using it for rng on array size
                     // okay well...if it's NOT a wall, we need to check the tile next to it for "event"
                     // we probably need to "flag" tiles using the data properly...this bg color thing is insane
                     // This should eventually use a switch case...not that we have a lot of events but still...
                     // top
                     if(tile.css("border-top-color") == "rgb(255, 255, 255)"){
-                         switch($($(".tile")[parseInt(tile.attr('id')) - 27]).data("event")){
-                              case "wall":
-                                   $($(".journal_entry")[journal_index]).append("Up: " + journal_text["exit"])
-                                   break;
+                         switch($($(".tile")[tile_id - 27]).data("event")){
                               case "exit":
                                    $($(".journal_entry")[journal_index]).append("Up: " + journal_text["exit"])
                                    break;
@@ -811,9 +804,7 @@
                                    $($(".journal_entry")[journal_index]).append("Up: " + journal_text["empty"])
                                    break;
                               case "enemy":
-                                   enemy = RNGsus(0, num_enemies) // dynamically updates as enemies are added, so there...
-                                   $($(".journal_entry")[journal_index]).append("Up: A wild " + journal_text["enemy"][enemy])
-                                   $($(".tile")[parseInt(tile.attr('id')) - 27]).data("enemy", enemy)
+                                   $($(".journal_entry")[journal_index]).append("Up: A wild " + journal_text["enemy"][$($(".tile")[tile_id - 27]).data("enemy")])
                                    break;
                               case "heal":
                                    $($(".journal_entry")[journal_index]).append("Up: " + journal_text["heal"])
@@ -829,10 +820,7 @@
                     }
                     // bottom
                     if(tile.css("border-bottom-color") == "rgb(255, 255, 255)"){
-                         switch($($(".tile")[parseInt(tile.attr('id')) + 27]).data("event")){
-                              case "wall":
-                                   $($(".journal_entry")[journal_index]).append("<br>Down: " + journal_text["exit"])
-                                   break;
+                         switch($($(".tile")[tile_id + 27]).data("event")){
                               case "exit":
                                    $($(".journal_entry")[journal_index]).append("<br>Down: " + journal_text["exit"])
                                    break;
@@ -840,9 +828,7 @@
                                    $($(".journal_entry")[journal_index]).append("<br>Down: " + journal_text["empty"])
                                    break;
                               case "enemy":
-                                   enemy = RNGsus(0, num_enemies)
-                                   $($(".journal_entry")[journal_index]).append("<br>Down: A wild " + journal_text["enemy"][enemy])
-                                   $($(".tile")[parseInt(tile.attr('id')) + 27]).data("enemy", enemy)
+                                   $($(".journal_entry")[journal_index]).append("<br>Down: A wild " + journal_text["enemy"][$($(".tile")[tile_id + 27]).data("enemy")])
                                    break;
                               case "heal":
                                    $($(".journal_entry")[journal_index]).append("<br>Down: " + journal_text["heal"])
@@ -858,10 +844,7 @@
                     }
                     // left
                     if(tile.css("border-left-color") == "rgb(255, 255, 255)"){
-                         switch($($(".tile")[parseInt(tile.attr('id')) - 1]).data("event")){
-                              case "wall":
-                                   $($(".journal_entry")[journal_index]).append("<br>Left: " + journal_text["exit"])
-                                   break;
+                         switch($($(".tile")[tile_id - 1]).data("event")){
                               case "exit":
                                    $($(".journal_entry")[journal_index]).append("<br>Left: " + journal_text["exit"])
                                    break;
@@ -869,9 +852,7 @@
                                    $($(".journal_entry")[journal_index]).append("<br>Left: " + journal_text["empty"])
                                    break;
                               case "enemy":
-                                   enemy = RNGsus(0, num_enemies)
-                                   $($(".journal_entry")[journal_index]).append("<br>Left: A wild " + journal_text["enemy"][enemy])
-                                   $($(".tile")[parseInt(tile.attr('id')) - 1]).data("enemy", enemy)
+                                   $($(".journal_entry")[journal_index]).append("<br>Left: A wild " + journal_text["enemy"][$($(".tile")[tile_id - 1]).data("enemy")])
                                    break;
                               case "heal":
                                    $($(".journal_entry")[journal_index]).append("<br>Left: " + journal_text["heal"])
@@ -887,10 +868,7 @@
                     }
                     // right
                     if(tile.css("border-right-color") == "rgb(255, 255, 255)"){
-                         switch($($(".tile")[parseInt(tile.attr('id')) + 1]).data("event")){
-                              case "wall":
-                                   $($(".journal_entry")[journal_index]).append("<br>Right: " + journal_text["exit"])
-                                   break;
+                         switch($($(".tile")[tile_id + 1]).data("event")){
                               case "exit":
                                    $($(".journal_entry")[journal_index]).append("<br>Right: " + journal_text["exit"])
                                    break;
@@ -898,9 +876,7 @@
                                    $($(".journal_entry")[journal_index]).append("<br>Right: " + journal_text["empty"])
                                    break;
                               case "enemy":
-                                   enemy = RNGsus(0, num_enemies)
-                                   $($(".journal_entry")[journal_index]).append("<br>Right: A wild " + journal_text["enemy"][enemy])
-                                   $($(".tile")[parseInt(tile.attr('id')) + 1]).data("enemy", enemy)
+                                   $($(".journal_entry")[journal_index]).append("<br>Right: A wild " + journal_text["enemy"][$($(".tile")[tile_id + 1]).data("enemy")])
                                    break;
                               case "heal":
                                    $($(".journal_entry")[journal_index]).append("<br>Right: " + journal_text["heal"])
@@ -939,8 +915,11 @@
                          event_rng = RNGsus(1, 100); // since it's inclusive
                          if(event_rng <= 50) // empty
                               $($(".tile")[tile]).data("event", "empty")
-                         else if(event_rng > 50 && event_rng <= 75) // enemy
+                         else if(event_rng > 50 && event_rng <= 75){ // enemy
                               $($(".tile")[tile]).data("event", "enemy")
+                              enemy = RNGsus(0, num_enemies) // dynamically updates as enemies are added, so there...
+                              $($(".tile")[tile]).data("enemy", enemy)
+                         }
                          else if(event_rng > 75 && event_rng <= 85) // healing fountain?
                               $($(".tile")[tile]).data("event", "heal")
                          else // TREASURE!!
